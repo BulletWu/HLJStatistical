@@ -1,0 +1,6 @@
+use_frameworks!
+
+target 'HLJStatistical_Example' do
+  pod 'HLJStatistical', :path => '../'
+  pod 'Masonry'
+end
