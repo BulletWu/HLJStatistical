@@ -69,8 +69,7 @@
 
 - (void)hlj_didMoveToWindow {
     [self hlj_didMoveToWindow];
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hlj_calculateViewVisible) object:nil];
-    [self performSelector:@selector(hlj_updateViewVisible) withObject:nil afterDelay:0 inModes:@[NSDefaultRunLoopMode]];
+    [self hlj_updateViewVisible];
 }
 
 - (void)hlj_setFrame:(CGRect)frame {
