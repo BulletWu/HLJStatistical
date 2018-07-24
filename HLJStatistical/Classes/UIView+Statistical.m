@@ -13,6 +13,7 @@
 @interface UIView ()
 
 @property (nonatomic ,strong,readwrite) HLJViewTrackModel *hlj_trackModel;
+@property (nonatomic ,assign) BOOL hlj_trackHasPerform;
 
 @end
 
@@ -113,13 +114,15 @@
         return;
     }
     self.hlj_viewVisible = NO;
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hlj_calculateViewVisible) object:nil];
-    [self performSelector:@selector(hlj_calculateViewVisible) withObject:nil afterDelay:0 inModes:@[NSDefaultRunLoopMode]];
+    [self hlj_updateViewVisible];
 }
 
 #pragma mark - private methods
 - (void)hlj_updateViewVisible {
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hlj_calculateViewVisible) object:nil];
+    if (self.hlj_trackHasPerform) {
+        return;
+    }
+    self.hlj_trackHasPerform = YES;
     [self performSelector:@selector(hlj_calculateViewVisible) withObject:nil afterDelay:0 inModes:@[NSDefaultRunLoopMode]];
     for (UIView *view in self.subviews) {
         [view hlj_updateViewVisible];
@@ -127,6 +130,7 @@
 }
 
 - (void)hlj_calculateViewVisible {
+    self.hlj_trackHasPerform = NO;
     self.hlj_viewVisible = [self hlj_isDisplayedInScreen];
 }
 
@@ -188,5 +192,12 @@
     objc_setAssociatedObject(self, @selector(hlj_trackModel), hlj_trackModel, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
+- (BOOL)hlj_trackHasPerform {
+    return [objc_getAssociatedObject(self, @selector(hlj_trackHasPerform)) boolValue];
+}
+
+- (void)setHlj_trackHasPerform:(BOOL)hlj_trackHasPerform {
+    objc_setAssociatedObject(self, @selector(hlj_trackHasPerform), @(hlj_trackHasPerform), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
 
 @end
